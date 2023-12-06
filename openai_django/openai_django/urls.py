@@ -18,7 +18,10 @@ from django.urls import path, include
 from base_app.views import query_view
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('', query_view, name='query'),
-
+    path("admin/", admin.site.urls),
+    path("", query_view, name="query"),
 ]
+
+admin.site.site_header = "ChatPR Database"
+admin.site.site_title = "ChatPR"
+admin.site.index_title = "Members Only"
