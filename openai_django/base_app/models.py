@@ -22,6 +22,9 @@ class Example(models.Model):
     is_approved = models.BooleanField(
         default=False, help_text="Approved for fine-tuning"
     )
+    was_processed = models.BooleanField(
+        default=False, help_text="Processed in a prior fine-tuning run"
+    )
     created_by = models.ForeignKey(CustomUser, on_delete=models.PROTECT)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
