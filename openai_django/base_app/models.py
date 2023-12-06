@@ -32,10 +32,13 @@ class Example(models.Model):
         blank=True,
         help_text="The source of the record",
     )
-    reference = models.URLField(
+    private_reference = models.URLField(
         null=True, blank=True, help_text="Not used in fine-tuning"
     )
     # reference = models.URLField(max_length=200, blank=True)
+    private_note = models.TextField(
+        null=True, blank=True, help_text="Not used in fine-tuning"
+    )
 
     def __str__(self):
         return f"Example created by {self.created_by.username} on {self.created_at}"

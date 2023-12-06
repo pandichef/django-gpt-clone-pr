@@ -26,7 +26,7 @@ class ExampleAdmin(admin.ModelAdmin):
         "created_by",
         "created_at",
         "updated_at",
-        "reference",
+        "private_reference",
         "source_type",
     )
     list_filter = ("is_approved", "created_by")
