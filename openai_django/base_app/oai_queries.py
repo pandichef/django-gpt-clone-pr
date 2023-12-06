@@ -4,16 +4,51 @@ import os
 import openai
 
 # OpenAI API Key
-if settings.OPENAI_API_KEY:
-    openai.api_key = settings.OPENAI_API_KEY
-else:
-    raise Exception('OpenAI API Key not found')
+# if settings.OPENAI_API_KEY:
+openai.api_key = settings.OPENAI_API_KEY
+# else:
+#     raise Exception("OpenAI API Key not found")
 
 
 def get_completion(prompt):
-    query = openai.ChatCompletion.create(
-        model='gpt-3.5-turbo',
-        messages=[{"role": "user", "content": prompt }]
+    completion = openai.ChatCompletion.create(
+        # model="gpt-3.5-turbo",
+        model=os.environ["OPENAI_MODEL_NAME"],
+        messages=[
+            {
+                "role": "system",
+                # "content": "translate English to Biblical Hebrew with Cantillation",
+                "content": "add cantillation marks to Hebrew text that is already marked with vowels",
+            },
+            {"role": "user", "content": prompt},
+        ],
     )
-    response = query.get('choices')[0]['message']['content']
-    return response
+    # completion = openai.ChatCompletion.create(
+    #     model="gpt-3.5-turbo",
+    #     # model=os.environ["OPENAI_MODEL_NAME"],
+    #     messages=[
+    #         {"role": "system", "content": "translate from English to Hebrew",},
+    #         {"role": "user", "content": prompt},
+    #     ],
+    # )
+    # he0 = completion.choices[0].message["content"]
+    # completion = openai.ChatCompletion.create(
+    #     model="gpt-3.5-turbo",
+    #     # model=os.environ["OPENAI_MODEL_NAME"],
+    #     messages=[
+    #         {"role": "system", "content": "now add vowels to this text",},
+    #         {"role": "user", "content": he0},
+    #     ],
+    # )
+    # he1 = completion.choices[0].message["content"]
+    # completion = openai.ChatCompletion.create(
+    #     model="gpt-3.5-turbo",
+    #     # model=os.environ["OPENAI_MODEL_NAME"],
+    #     messages=[
+    #         {"role": "system", "content": "now add cantillation symbols to this text",},
+    #         {"role": "user", "content": he1},
+    #     ],
+    # )
+    # he2 = completion.choices[0].message["content"]
+    # return he2
+    return completion.choices[0].message["content"]
