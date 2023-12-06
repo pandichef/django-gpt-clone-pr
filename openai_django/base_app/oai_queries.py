@@ -18,7 +18,7 @@ def get_completion(prompt):
             {
                 "role": "system",
                 # "content": "translate English to Biblical Hebrew with Cantillation",
-                "content": "Provide advice related to taxes, accounting, or other services for residents of Puerto Rico.",
+                "content": settings.SYSTEM_CONTENT,
             },
             {"role": "user", "content": prompt},
         ],

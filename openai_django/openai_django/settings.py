@@ -124,3 +124,5 @@ MEDIA_ROOT = "/home/chatpr/media"  # prod only
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 AUTH_USER_MODEL = "base_app.CustomUser"  # new
+
+SYSTEM_CONTENT = "Provide advice related to taxes, accounting, or other services for residents and visitors of Puerto Rico."
