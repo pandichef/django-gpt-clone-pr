@@ -18,7 +18,7 @@ def get_completion(prompt):
             {
                 "role": "system",
                 # "content": "translate English to Biblical Hebrew with Cantillation",
-                "content": "add cantillation marks to Hebrew text that is already marked with vowels",
+                "content": "Provide advice related to taxes, accounting, or other services for residents of Puerto Rico.",
             },
             {"role": "user", "content": prompt},
         ],
