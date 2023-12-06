@@ -20,17 +20,23 @@ class SourceTypeAdmin(admin.ModelAdmin):
 
 class ExampleAdmin(admin.ModelAdmin):
     list_display = (
-        "prompt_text",
-        "completion_text",
-        "is_approved",
         "created_by",
-        "created_at",
-        "updated_at",
-        "private_reference",
         "source_type",
+        "prompt",
+        "completion",
+        "is_approved",
+        # "created_at",
+        "updated_at",
+        # "private_reference",
     )
     list_filter = ("is_approved", "created_by")
     search_fields = ("prompt_text", "completion_text")
+
+    def prompt(self, obj):
+        return obj.prompt_text[:140] + "..." if obj.prompt_text else ""
+
+    def completion(self, obj):
+        return obj.completion_text[:140] + "..." if obj.completion_text else ""
 
 
 admin.site.register(CustomUser, CustomUserAdmin)

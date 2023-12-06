@@ -41,4 +41,6 @@ class Example(models.Model):
     )
 
     def __str__(self):
-        return f"Example created by {self.created_by.username} on {self.created_at}"
+        return (
+            f"Example created by {self.created_by.username} on {self.created_at.date()}"
+        )

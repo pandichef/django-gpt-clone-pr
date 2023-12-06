@@ -26,7 +26,7 @@ SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", "")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["localhost", "chatpr.pythonanywhere.com"]
+ALLOWED_HOSTS = ["127.0.0.1", "localhost", "chatpr.pythonanywhere.com"]
 
 
 # Application definition
