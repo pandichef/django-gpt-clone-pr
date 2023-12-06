@@ -25,12 +25,13 @@ class ExampleAdmin(admin.ModelAdmin):
         "prompt",
         "completion",
         "is_approved",
+        "was_processed",
         # "created_at",
         "updated_at",
         # "private_reference",
     )
-    list_filter = ("is_approved", "created_by")
-    search_fields = ("prompt_text", "completion_text")
+    list_filter = ("is_approved", "was_processed", "created_by")
+    search_fields = ("prompt_text", "completion_text", "private_note")
 
     def prompt(self, obj):
         return obj.prompt_text[:140] + "..." if obj.prompt_text else ""
