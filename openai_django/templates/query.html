@@ -49,7 +49,8 @@
 <body>
     <div class="container p-3">
         <h3>ChatGPT Fine-Tuned with Crowdsourced Information Related to Puerto Rico</h3>
-        <a href="https://github.com/pandichef/django-gpt-clone-pr" class="link-info">Project on Github</a>
+        <!-- <a href="https://github.com/pandichef/django-gpt-clone-pr" class="link-info">Project on Github</a> -->
+        <a href="{% url 'admin:base_app_example_add' %}" class="link-info">Add an example for fine-tuning</a> (members only)
         <div class="mb-3">
             <form method="post">
                 {% csrf_token %}
