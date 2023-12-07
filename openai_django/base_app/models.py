@@ -7,6 +7,9 @@ from django.db.models import QuerySet
 from django.db.models import F, Case, When, Value, CharField, Q
 
 
+base_openai_model = "gpt-3.5-turbo-1106"
+
+
 class CustomUser(AbstractUser):
     pass
 
@@ -62,12 +65,21 @@ class FineTuningJob(models.Model):
             "created_at"
         )
         if successful_jobs.count() == 0:
-            prior_model = "gpt-3.5-turbo-1106"  # settings.BASE_OPENAI_MODEL
+            prior_model = base_openai_model  # settings.BASE_OPENAI_MODEL
             # prior_model = "gpt-4-0613"  # settings.BASE_OPENAI_MODEL
         else:
             last_successful_job = successful_jobs.last()
             prior_model = last_successful_job.fine_tuned_model
         return prior_model
+
+    @classmethod
+    def get_lastest_update_date(cls):
+        openai_model_name = cls.get_latest_openai_model()
+        if openai_model_name == base_openai_model:
+            return f"Never updated.  Using {base_openai_model}."
+        else:
+            last_job = cls.objects.get(fine_tuned_model=openai_model_name)
+            return f"Last updated {last_job.updated_at.date()} using base model {base_openai_model}."
 
     def __str__(self):
         return f"{str(self.openai_id)}"
