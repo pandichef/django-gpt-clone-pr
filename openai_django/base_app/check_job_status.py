@@ -3,7 +3,7 @@ from openai import OpenAI
 from .models import FineTuningJob
 from datetime import datetime, timedelta, timezone
 
-wait_time_hours = 0.75  # don't expect fine-tuning to be ready for a while
+wait_time_hours = 0  # don't expect fine-tuning to be ready for a while
 
 
 class CheckJobStatus:
@@ -33,14 +33,21 @@ class CheckJobStatus:
             # last_job = running_jobs.first()
             client = OpenAI()
             openai_job_object = client.fine_tuning.jobs.retrieve(last_job.openai_id)
-            if openai_job_object.error:
+            if openai_job_object.status == "cancelled":
+                last_job.error_message = "Cancelled"
+                last_job.save()
+                related_examples = last_job.example_set.all()
+                for example in related_examples:
+                    example.fine_tuning_job = None
+                    example.save()
+            elif openai_job_object.error:
                 last_job.error_message = openai_job_object.error.message
                 last_job.save()
                 related_examples = last_job.example_set.all()
                 for example in related_examples:
                     example.fine_tuning_job = None
                     example.save()
-            if openai_job_object.fine_tuned_model:
+            elif openai_job_object.fine_tuned_model:
                 last_job.fine_tuned_model = openai_job_object.fine_tuned_model
                 last_job.save()
             # print(openai_job_object)

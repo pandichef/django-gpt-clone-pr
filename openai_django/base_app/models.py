@@ -33,7 +33,7 @@ class FineTuningJobManager(models.Manager):
                 ),
                 When(
                     Q(error_message__isnull=False) & Q(fine_tuned_model__isnull=True),
-                    then=Value("Error"),
+                    then=Value("Failed"),
                 ),
                 default=Value(
                     "Something went wrong. Error message should be null or Fine-funed should be null"
@@ -47,6 +47,7 @@ class FineTuningJobManager(models.Manager):
 class FineTuningJob(models.Model):
     openai_id = models.CharField(max_length=256, primary_key=True)
     created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
     prior_model = models.CharField(max_length=256, null=False, blank=False)
     # post-completion
     # status = models.CharField(max_length=256, null=True, blank=True)
@@ -68,7 +69,7 @@ class FineTuningJob(models.Model):
         return prior_model
 
     def __str__(self):
-        return str(self.openai_id)
+        return f"{str(self.openai_id)}"
 
 
 class Example(models.Model):

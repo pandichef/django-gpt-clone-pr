@@ -41,6 +41,7 @@ class FineTuningJobAdmin(admin.ModelAdmin):
     )
     list_filter = (
         "created_at",
+        "updated_at",
         "prior_model",
     )
     search_fields = ("openai_id", "prior_model", "fine_tuned_model")
