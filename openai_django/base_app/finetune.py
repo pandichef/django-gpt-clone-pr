@@ -15,10 +15,10 @@ from base_app.models import Example
 qs = Example.objects.filter(Q(is_approved=True) & Q(fine_tuning_job__isnull=True))
 
 
-def convert_to_openai_format(qs: QuerySet) -> list:
+def convert_to_openai_format(examples: QuerySet) -> list:
     openai_list = []
 
-    for obj in qs:
+    for obj in examples:
         this_dict = {
             "messages": [
                 {"role": "system", "content": settings.SYSTEM_CONTENT},
@@ -30,7 +30,7 @@ def convert_to_openai_format(qs: QuerySet) -> list:
             ]
         }
         openai_list.append(this_dict)
-    return openai_list
+    return openai_list  # i.e., records
 
 
 # print(qs)

@@ -3,6 +3,8 @@ from django.db import models
 # Create your models here.
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.db.models import QuerySet
+from django.db.models import F, Case, When, Value, CharField, Q
 
 
 class CustomUser(AbstractUser):
@@ -16,14 +18,57 @@ class SourceType(models.Model):
         return self.name
 
 
+class FineTuningJobManager(models.Manager):
+    def get_queryset(self) -> QuerySet:
+        qs = super().get_queryset()
+        qs = qs.annotate(
+            job_status=Case(
+                When(
+                    Q(error_message__isnull=True) & Q(fine_tuned_model__isnull=True),
+                    then=Value("Running"),
+                ),
+                When(
+                    Q(error_message__isnull=True) & Q(fine_tuned_model__isnull=False),
+                    then=Value("Success"),
+                ),
+                When(
+                    Q(error_message__isnull=False) & Q(fine_tuned_model__isnull=True),
+                    then=Value("Error"),
+                ),
+                default=Value(
+                    "Something went wrong. Error message should be null or Fine-funed should be null"
+                ),
+                output_field=CharField(),
+            )
+        )
+        return qs
+
+
 class FineTuningJob(models.Model):
     openai_id = models.CharField(max_length=256, primary_key=True)
     created_at = models.DateTimeField(auto_now_add=True)
     prior_model = models.CharField(max_length=256, null=False, blank=False)
     # post-completion
     # status = models.CharField(max_length=256, null=True, blank=True)
-    # error_message = models.CharField(max_length=256, null=True, blank=True)
+    error_message = models.CharField(max_length=256, null=True, blank=True)
     fine_tuned_model = models.CharField(max_length=256, null=True, blank=True)
+
+    objects = FineTuningJobManager()
+
+    @classmethod
+    def get_latest_openai_model(cls):
+        successful_jobs = cls.objects.filter(job_status="Success").order_by(
+            "created_at"
+        )
+        if successful_jobs.count() == 0:
+            prior_model = "gpt-3.5-turbo"  # settings.BASE_OPENAI_MODEL
+        else:
+            last_successful_job = successful_jobs.last()
+            prior_model = last_successful_job.fine_tuned_model
+        return prior_model
+
+    def __str__(self):
+        return str(self.openai_id)
 
 
 class Example(models.Model):

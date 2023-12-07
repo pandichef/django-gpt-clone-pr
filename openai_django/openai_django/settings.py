@@ -50,6 +50,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "base_app.check_job_status.CheckJobStatus",
 ]
 
 ROOT_URLCONF = "openai_django.urls"
@@ -126,3 +127,6 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 AUTH_USER_MODEL = "base_app.CustomUser"  # new
 
 SYSTEM_CONTENT = "Provide advice related to taxes, accounting, or other services for residents and visitors of Puerto Rico."
+
+MINIMUM_NUMBER_OF_EXAMPLES_PER_OPENAI_JOB = 10
+# BASE_OPENAI_MODEL = "gpt-3.5-turbo"  # used for first fine tuning job
