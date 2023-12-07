@@ -183,7 +183,8 @@ class ExampleAdmin(admin.ModelAdmin):
         # For example, you can perform additional processing or logging
         # Call the superclass's save_model method to save the object to the database
         # print("asdfasdfasdfasf")
-        obj.created_by = request.user
+        if not obj.created_by:
+            obj.created_by = request.user
         super().save_model(request, obj, form, change)
         # print("asdfasdfasdfasf")
         ready_for_fine_tuning = Example.objects.filter(
