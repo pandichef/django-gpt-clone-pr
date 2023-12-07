@@ -96,7 +96,7 @@ class FineTuningJobAdmin(admin.ModelAdmin):
         ):
             self.message_user(
                 request,
-                f"There are only {examples_to_be_processed.count()} examples to be process.  OpenAI requires at least 10 per job.",
+                f"There are only {examples_to_be_processed.count()} examples to be processed.  OpenAI requires at least 10 per job.",
             )
             return HttpResponseRedirect("../")
         else:  # default
