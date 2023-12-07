@@ -62,7 +62,8 @@ class FineTuningJob(models.Model):
             "created_at"
         )
         if successful_jobs.count() == 0:
-            prior_model = "gpt-3.5-turbo"  # settings.BASE_OPENAI_MODEL
+            prior_model = "gpt-3.5-turbo-1106"  # settings.BASE_OPENAI_MODEL
+            # prior_model = "gpt-4-0613"  # settings.BASE_OPENAI_MODEL
         else:
             last_successful_job = successful_jobs.last()
             prior_model = last_successful_job.fine_tuned_model
