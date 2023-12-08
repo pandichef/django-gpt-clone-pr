@@ -38,9 +38,11 @@ def extract_keywords(text):
 
 
 def make_score_list(search_string: str, strings_to_search: list) -> list:
+    # print(search_string)
     lower_case_keywords = extract_keywords(search_string)
     # print(keywords)
     scores = []
+    # print(strings_to_search)
     for this_string in strings_to_search:
         this_string = this_string.lower()
         this_score = 0
@@ -51,8 +53,10 @@ def make_score_list(search_string: str, strings_to_search: list) -> list:
 
 
 def sort_string_list(search_string: str, strings_to_search: list):
+    # print(search_string)
+    # print(strings_to_search)
     scores = make_score_list(search_string, strings_to_search)
-    print(scores)
+    # print(scores)
     # Your lists
     # strings = ['james', 'bob', 'the zohar is crazy', 'i am jewish']
     # ranks = [0, 2, 4, 6]

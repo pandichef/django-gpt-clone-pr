@@ -4,6 +4,11 @@ import os
 import openai
 from .models import FineTuningJob, Example
 from .simple_search import sort_string_list
+from .finetune import add_date_and_source
+
+
+def make_full_prompt(example):
+    return f"Prompt:\n{add_date_and_source(example)}\n\nCompletion:\n{example.completion_text}\n\n"
 
 
 # OpenAI API Key
@@ -13,16 +18,13 @@ from .simple_search import sort_string_list
 #     raise Exception("OpenAI API Key not found")
 
 
-def collate_prior_prompts(prompt, return_size=3):
+def collate_prior_prompts(prompt, return_size=1):
     # todo: limit examples by rank
     examples = Example.objects.all()
     examples_list = []
     # database_prompts = ""
     for example in examples:
-        examples_list.append(
-            f"Prompt:\n{example.prompt_text}\n\nCompletion:\n{example.completion_text}\n\n"
-        )
-        # database_prompts += f"Prompt:\n{example.prompt_text}\n\nCompletion:\n{example.completion_text}\n\n"
+        examples_list.append(make_full_prompt(example))
     sorted = sort_string_list(prompt, examples_list)[:return_size]
     print(len(sorted))
     # print(sorted)
@@ -30,7 +32,7 @@ def collate_prior_prompts(prompt, return_size=3):
     for x in sorted:
         database_prompts += x
     # return sorted[:return_size]
-    print(len(database_prompts))
+    # print(len(database_prompts))
     return database_prompts
 
 
@@ -53,7 +55,8 @@ def get_completion(prompt):
         prompt_plus = (
             collate_prior_prompts(prompt) + f"Prompt:\n{prompt}\n\nCompletion:\n"
         )
-        print(f"Estimated token count: {len(prompt_plus.split())}")
+        print(prompt_plus)
+        # print(f"Estimated token count: {len(prompt_plus.split())}")
         # print(prompt_plus)
         # prompt_plus = prompt
 
