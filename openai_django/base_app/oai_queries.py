@@ -69,9 +69,7 @@ def get_completion(prompt):
         )
         # print(completion)
         print(f"Used {lastest_openai_model} for front-end application")
-        # return prompt_plus + str(
-        #     completion.choices[0].message.content
-        # )  # to see full prompt text
+        print("prompt_plus:\n", prompt_plus)
         return str(completion.choices[0].message.content)
     except Exception as e:
         return str(e)
