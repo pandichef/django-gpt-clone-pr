@@ -66,7 +66,7 @@ def get_completion(prompt):
         prompt_plus = (
             collate_prior_prompts(prompt) + f"Prompt:\n{prompt}\n\nCompletion:\n"
         )
-        print(prompt_plus)
+        # print(prompt_plus)
         # print(f"Estimated token count: {len(prompt_plus.split())}")
         # print(prompt_plus)
         # prompt_plus = prompt
@@ -79,10 +79,9 @@ def get_completion(prompt):
             ],
         )
         # print(completion)
-        print(f"Used {lastest_openai_model} for front-end application")
         print("prompt_plus:\n", prompt_plus)
-
         print("Prompt token count: ", token_count(prompt_plus))
+        print(f"Used {lastest_openai_model} for front-end application")
         return str(completion.choices[0].message.content)
     except Exception as e:
         return str(e)
