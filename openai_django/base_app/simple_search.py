@@ -52,6 +52,7 @@ def make_score_list(search_string: str, strings_to_search: list) -> list:
 
 def sort_string_list(search_string: str, strings_to_search: list):
     scores = make_score_list(search_string, strings_to_search)
+    print(scores)
     # Your lists
     # strings = ['james', 'bob', 'the zohar is crazy', 'i am jewish']
     # ranks = [0, 2, 4, 6]
