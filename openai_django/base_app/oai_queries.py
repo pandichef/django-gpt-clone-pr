@@ -37,7 +37,7 @@ def collate_prior_prompts(prompt, return_size=3):
     for example in examples:
         examples_list.append(make_full_prompt(example))
     sorted = sort_string_list(prompt, examples_list)[:return_size]
-    print(len(sorted))
+    print("Prior prompts found: ", len(sorted))
     # print(sorted)
     database_prompts = ""
     for x in sorted:
