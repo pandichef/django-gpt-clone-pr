@@ -18,7 +18,7 @@ def make_full_prompt(example):
 #     raise Exception("OpenAI API Key not found")
 
 
-def collate_prior_prompts(prompt, return_size=1):
+def collate_prior_prompts(prompt, return_size=3):
     # todo: limit examples by rank
     examples = Example.objects.all()
     examples_list = []
