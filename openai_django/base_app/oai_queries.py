@@ -5,6 +5,17 @@ import openai
 from .models import FineTuningJob, Example
 from .simple_search import sort_string_list
 from .finetune import add_date_and_source
+import tiktoken
+
+# encoding = tiktoken.get_encoding("cl100k_base")
+encoding = tiktoken.encoding_for_model("gpt-3.5-turbo")
+
+
+def token_count(string: str) -> int:
+    """Returns the number of tokens in a text string."""
+    # encoding = tiktoken.get_encoding(encoding_name)
+    num_tokens = len(encoding.encode(string))
+    return num_tokens
 
 
 def make_full_prompt(example):
@@ -70,6 +81,8 @@ def get_completion(prompt):
         # print(completion)
         print(f"Used {lastest_openai_model} for front-end application")
         print("prompt_plus:\n", prompt_plus)
+
+        print("Prompt token count: ", token_count(prompt_plus))
         return str(completion.choices[0].message.content)
     except Exception as e:
         return str(e)
