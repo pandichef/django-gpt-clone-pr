@@ -13,7 +13,7 @@ from .simple_search import sort_string_list
 #     raise Exception("OpenAI API Key not found")
 
 
-def collate_prior_prompts(prompt, return_size=5):
+def collate_prior_prompts(prompt, return_size=3):
     # todo: limit examples by rank
     examples = Example.objects.all()
     examples_list = []
@@ -23,13 +23,14 @@ def collate_prior_prompts(prompt, return_size=5):
             f"Prompt:\n{example.prompt_text}\n\nCompletion:\n{example.completion_text}\n\n"
         )
         # database_prompts += f"Prompt:\n{example.prompt_text}\n\nCompletion:\n{example.completion_text}\n\n"
-    # print(examples)
-    database_prompts = ""
     sorted = sort_string_list(prompt, examples_list)[:return_size]
+    print(len(sorted))
     # print(sorted)
+    database_prompts = ""
     for x in sorted:
         database_prompts += x
     # return sorted[:return_size]
+    print(len(database_prompts))
     return database_prompts
 
 

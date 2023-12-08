@@ -64,7 +64,7 @@ def sort_string_list(search_string: str, strings_to_search: list):
     sorted_zipped = sorted(zipped, reverse=True)
 
     # Extract the strings from the sorted zipped list
-    sorted_strings = [string for rank, string in sorted_zipped]
+    sorted_strings = [string for score, string in sorted_zipped if score != 0]
 
     # print(sorted_strings)
     return sorted_strings
