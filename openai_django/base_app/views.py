@@ -5,12 +5,12 @@ from .oai_queries import get_completion
 
 
 def query_view(request):
-    print("====> START")
     if request.method == "POST":
+        print("====> START")
         prompt = request.POST.get("prompt")
         response = get_completion(prompt)
+        print("====> END")
         return JsonResponse({"response": response})
-    print("====> END")
     return render(
         request, "query.html", {"update_text": FineTuningJob.get_lastest_update_date()}
     )
