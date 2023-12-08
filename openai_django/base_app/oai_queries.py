@@ -3,6 +3,8 @@ from django.conf import settings
 import os
 import openai
 from .models import FineTuningJob, Example
+from .simple_search import sort_string_list
+
 
 # OpenAI API Key
 # if settings.OPENAI_API_KEY:
@@ -11,13 +13,31 @@ from .models import FineTuningJob, Example
 #     raise Exception("OpenAI API Key not found")
 
 
-def collate_prior_prompts():
+def collate_prior_prompts(prompt, return_size=5):
     # todo: limit examples by rank
-    eaxmples = Example.objects.all()
+    qs = Example.objects.all()
+    examples = []
+    # database_prompts = ""
+    for example in examples:
+        examples.append(
+            f"Prompt:\n{example.prompt_text}\n\nCompletion:\n{example.completion_text}\n\n"
+        )
+        # database_prompts += f"Prompt:\n{example.prompt_text}\n\nCompletion:\n{example.completion_text}\n\n"
     database_prompts = ""
-    for example in eaxmples:
-        database_prompts += f"Prompt:\n{example.prompt_text}\n\nCompletion:\n{example.completion_text}\n\n"
+    sorted = sort_string_list(prompt, examples)[:return_size]
+    for x in sorted:
+        database_prompts += x
+    # return sorted[:return_size]
     return database_prompts
+
+
+# def collate_prior_prompts():
+#     # todo: limit examples by rank
+#     examples = Example.objects.all()
+#     database_prompts = ""
+#     for example in examples:
+#         database_prompts += f"Prompt:\n{example.prompt_text}\n\nCompletion:\n{example.completion_text}\n\n"
+#     return database_prompts
 
 
 def get_completion(prompt):
@@ -27,7 +47,10 @@ def get_completion(prompt):
 
         client = OpenAI()
 
-        prompt_plus = collate_prior_prompts() + f"Prompt:\n{prompt}\n\nCompletion:\n"
+        prompt_plus = (
+            collate_prior_prompts(prompt) + f"Prompt:\n{prompt}\n\nCompletion:\n"
+        )
+        print(f"Estimated token count: {len(prompt_plus.split())}")
         # print(prompt_plus)
         # prompt_plus = prompt
 
