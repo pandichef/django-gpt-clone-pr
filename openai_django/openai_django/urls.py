@@ -26,4 +26,4 @@ urlpatterns = [
 admin.site.site_header = "ChatPR Database"
 admin.site.site_title = "ChatPR"
 admin.site.index_title = "Members Only"
-admin.site.site_url = os.environ["CHATPR_SITE_URL"]
+# admin.site.site_url = os.environ["CHATPR_SITE_URL"]
