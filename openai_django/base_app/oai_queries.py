@@ -76,6 +76,11 @@ def get_completion(prompt):
             + database_prompts
             + f"Question: {prompt}\nAnswer: "
         )
+        prompt_plus_summarized = (
+            "Provide the best possible answer to the following questions.\n\n"
+            + database_prompts_summarized
+            + f"Question: {prompt}\nAnswer: "
+        )
         # print(prompt_plus)
         # print(f"Estimated token count: {len(prompt_plus.split())}")
         # print(prompt_plus)
@@ -90,9 +95,10 @@ def get_completion(prompt):
         )
         # print(completion)
         # print(
-        #     "prompt_plus:\n", database_prompts_summarized + f"Question:\n{prompt}\nAnswer:\n",
+        #     "prompt_plus:\n",
+        #     database_prompts_summarized + f"Question: {prompt}\nAnswer: ",
         # )
-        print("prompt_plus:\n", prompt_plus)
+        print("prompt_plus:\n", prompt_plus_summarized)
         print("Prompt token count: ", token_count(prompt_plus))
         print(f"Used {lastest_openai_model} for front-end application")
         return str(completion.choices[0].message.content)
