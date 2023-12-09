@@ -40,11 +40,13 @@ def collate_prior_prompts(prompt, return_size=3):
     print("Prior prompts found: ", len(sorted))
     # print(sorted)
     database_prompts = ""
+    database_prompts_summarized = ""
     for x in sorted:
         database_prompts += x
+        database_prompts_summarized += " ".join(x.split()[:20])
     # return sorted[:return_size]
     # print(len(database_prompts))
-    return database_prompts
+    return database_prompts, database_prompts_summarized
 
 
 # def collate_prior_prompts():
@@ -63,9 +65,8 @@ def get_completion(prompt):
 
         client = OpenAI()
 
-        prompt_plus = (
-            collate_prior_prompts(prompt) + f"Prompt:\n{prompt}\n\nCompletion:\n"
-        )
+        database_prompts, database_prompts_summarized = collate_prior_prompts(prompt)
+        prompt_plus = database_prompts + f"Prompt:\n{prompt}\n\nCompletion:\n"
         # print(prompt_plus)
         # print(f"Estimated token count: {len(prompt_plus.split())}")
         # print(prompt_plus)
@@ -79,7 +80,10 @@ def get_completion(prompt):
             ],
         )
         # print(completion)
-        print("prompt_plus:\n", prompt_plus)
+        print(
+            "prompt_plus:\n",
+            database_prompts_summarized + f"Prompt:\n{prompt}\n\nCompletion:\n",
+        )
         print("Prompt token count: ", token_count(prompt_plus))
         print(f"Used {lastest_openai_model} for front-end application")
         return str(completion.choices[0].message.content)
