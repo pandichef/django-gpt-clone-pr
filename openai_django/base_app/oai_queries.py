@@ -19,7 +19,9 @@ def token_count(string: str) -> int:
 
 
 def make_full_prompt(example):
-    return f"Prompt:\n{example.prompt_text}\n\nCompletion:\n{add_date_and_source(example)}\n\n"
+    return (
+        f"Question: {example.prompt_text}\nAnswer: {add_date_and_source(example)}\n##\n"
+    )
 
 
 # OpenAI API Key
@@ -34,6 +36,7 @@ def collate_prior_prompts(prompt, return_size=3):
     examples = Example.objects.all()
     examples_list = []
     # database_prompts = ""
+    # prompt_index = 1
     for example in examples:
         examples_list.append(make_full_prompt(example))
     sorted = sort_string_list(prompt, examples_list)[:return_size]
@@ -42,11 +45,13 @@ def collate_prior_prompts(prompt, return_size=3):
     database_prompts = ""
     database_prompts_summarized = ""
     for x in sorted:
+        # print(prompt_index)
         database_prompts += x
         database_prompts_summarized += " ".join(x.split()[:20]) + "..."
+        # prompt_index += 1
     # return sorted[:return_size]
     # print(len(database_prompts))
-    return database_prompts, database_prompts_summarized
+    return database_prompts, database_prompts_summarized  # , prompt_index
 
 
 # def collate_prior_prompts():
@@ -65,8 +70,12 @@ def get_completion(prompt):
 
         client = OpenAI()
 
-        database_prompts, database_prompts_summarized = collate_prior_prompts(prompt)
-        prompt_plus = database_prompts + f"Prompt:\n{prompt}\n\nCompletion:\n"
+        (database_prompts, database_prompts_summarized,) = collate_prior_prompts(prompt)
+        prompt_plus = (
+            "Provide the best possible answer to the following questions.\n\n"
+            + database_prompts
+            + f"Question: {prompt}\nAnswer: "
+        )
         # print(prompt_plus)
         # print(f"Estimated token count: {len(prompt_plus.split())}")
         # print(prompt_plus)
@@ -80,10 +89,10 @@ def get_completion(prompt):
             ],
         )
         # print(completion)
-        print(
-            "prompt_plus:\n",
-            database_prompts_summarized + f"Prompt:\n{prompt}\n\nCompletion:\n",
-        )
+        # print(
+        #     "prompt_plus:\n", database_prompts_summarized + f"Question:\n{prompt}\nAnswer:\n",
+        # )
+        print("prompt_plus:\n", prompt_plus)
         print("Prompt token count: ", token_count(prompt_plus))
         print(f"Used {lastest_openai_model} for front-end application")
         return str(completion.choices[0].message.content)
