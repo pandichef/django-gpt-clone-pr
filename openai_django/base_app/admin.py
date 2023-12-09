@@ -150,7 +150,45 @@ class FineTuningJobAdmin(admin.ModelAdmin):
     #     return HttpResponseRedirect("../")
 
 
+# import csv
+from django.http import HttpResponse
+
+from .finetune import add_context_info
+
+# class ExportTxtMixin:
+
+
 class ExampleAdmin(admin.ModelAdmin):
+    change_list_template = "example_changelist.html"
+
+    def get_urls(self):
+        urls = super().get_urls()
+        my_urls = [
+            path("export_examples/", self.export_as_txt),
+            # path("mortal/", self.set_mortal),
+        ]
+        return my_urls + urls
+
+    # def export_examples(self):
+    #     from .export_examples import export_examples as save_examples_file
+
+    #     save_examples_file()
+
+    def export_as_txt(self, request):
+        response = HttpResponse(content_type="text/plain")
+        response["Content-Disposition"] = "attachment; filename=examples.txt"
+
+        for obj in self.model.objects.all():
+            response.write(f"Question: {obj.prompt_text}\n")
+            response.write(f"Answer: {add_context_info(obj)}\n")
+            response.write("##\n")  # Adding a newline for separation between entries
+
+        return response
+
+    # export_as_txt.short_description = "Export Selected as TXT"
+
+    # actions = ["export_as_txt"]
+
     readonly_fields = (
         "fine_tuning_job",
         "created_by",
