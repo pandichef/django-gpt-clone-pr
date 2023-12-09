@@ -8,6 +8,7 @@ from django.db.models import F, Case, When, Value, CharField, Q
 
 
 base_openai_model = "gpt-3.5-turbo-1106"
+# base_openai_model = "gpt-4" # on waitlist
 
 
 class CustomUser(AbstractUser):
