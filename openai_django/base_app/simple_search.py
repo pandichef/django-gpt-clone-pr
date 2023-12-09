@@ -47,7 +47,9 @@ def make_score_list(search_string: str, strings_to_search: list) -> list:
         this_string = this_string.lower()
         this_score = 0
         for keyword in lower_case_keywords:
-            this_score += this_string.count(keyword)
+            # this_score += this_string.count(keyword)
+            if this_string.find(keyword) > -1:
+                this_score += 1
         scores.append(this_score)
     return scores
 
