@@ -19,7 +19,7 @@ def token_count(string: str) -> int:
 
 
 def make_full_prompt(example):
-    return f"Prompt:\n{add_date_and_source(example)}\n\nCompletion:\n{example.completion_text}\n\n"
+    return f"Prompt:\n{example.prompt_text}\n\nCompletion:\n{add_date_and_source(example)}\n\n"
 
 
 # OpenAI API Key
@@ -43,7 +43,7 @@ def collate_prior_prompts(prompt, return_size=3):
     database_prompts_summarized = ""
     for x in sorted:
         database_prompts += x
-        database_prompts_summarized += " ".join(x.split()[:10]) + "..."
+        database_prompts_summarized += " ".join(x.split()[:20]) + "..."
     # return sorted[:return_size]
     # print(len(database_prompts))
     return database_prompts, database_prompts_summarized

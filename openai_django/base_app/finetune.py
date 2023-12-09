@@ -17,9 +17,11 @@ qs = Example.objects.filter(Q(is_approved=True) & Q(fine_tuning_job__isnull=True
 
 def add_date_and_source(obj):
     if obj.source_type:
-        return f'On {obj.created_at.date().strftime("%B %d, %Y")}, according to a {obj.source_type}, {obj.prompt_text}'
+        return f'On {obj.created_at.date().strftime("%B %d, %Y")}, according to a {obj.source_type}, {obj.completion_text}'
     else:
-        return f'On {obj.created_at.date().strftime("%B %d, %Y")}, {obj.prompt_text}'
+        return (
+            f'On {obj.created_at.date().strftime("%B %d, %Y")}, {obj.completion_text}'
+        )
 
 
 def convert_to_openai_format(examples: QuerySet) -> list:
@@ -29,8 +31,8 @@ def convert_to_openai_format(examples: QuerySet) -> list:
         this_dict = {
             "messages": [
                 {"role": "system", "content": settings.SYSTEM_CONTENT},
-                {"role": "user", "content": add_date_and_source(obj),},
-                {"role": "assistant", "content": obj.completion_text,},
+                {"role": "user", "content": add_date_and_source(obj.prompt_text),},
+                {"role": "assistant", "content": add_date_and_source(obj),},
             ]
         }
         openai_list.append(this_dict)
