@@ -4,7 +4,7 @@ import os
 import openai
 from .models import FineTuningJob, Example
 from .simple_search import sort_string_list
-from .finetune import add_date_and_source
+from .finetune import add_context_info
 import tiktoken
 
 # encoding = tiktoken.get_encoding("cl100k_base")
@@ -19,9 +19,7 @@ def token_count(string: str) -> int:
 
 
 def make_full_prompt(example):
-    return (
-        f"Question: {example.prompt_text}\nAnswer: {add_date_and_source(example)}\n##\n"
-    )
+    return f"Question: {example.prompt_text}\nAnswer: {add_context_info(example)}\n##\n"
 
 
 # OpenAI API Key
