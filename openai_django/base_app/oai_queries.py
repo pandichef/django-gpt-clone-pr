@@ -43,7 +43,7 @@ def collate_prior_prompts(prompt, return_size=3):
     database_prompts_summarized = ""
     for x in sorted:
         database_prompts += x
-        database_prompts_summarized += " ".join(x.split()[:20])
+        database_prompts_summarized += " ".join(x.split()[:10]) + "..."
     # return sorted[:return_size]
     # print(len(database_prompts))
     return database_prompts, database_prompts_summarized
