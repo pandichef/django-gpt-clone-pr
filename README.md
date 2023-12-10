@@ -4,10 +4,10 @@ This project uses the new [gpt-3.5-turbo](https://platform.openai.com/docs/guide
 
 ## Features
 
-0. Includes a ChatGPT front-end clone to run fine-tuned model
-1. Employs the Django Admin to collect custom user data
-2. Manages the completely flow to continously fine tune a base OpenAI LLM
-3. Implements [RAG](https://research.ibm.com/blog/retrieval-augmented-generation-RAG) by searching through the custom user data to prompt the LLM
+1. Includes a ChatGPT front-end clone to run fine-tuned model
+2. Employs the Django Admin to collect custom user data
+3. Manages the completely flow to continously fine tune a base OpenAI LLM
+4. Implements [RAG](https://research.ibm.com/blog/retrieval-augmented-generation-RAG) by searching through the custom user data to prompt the LLM
 
 ## Usage
 
