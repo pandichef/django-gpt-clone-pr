@@ -142,6 +142,7 @@ class Example(models.Model):
         """
         # qs = cls.objects.all()
         # select * from base_app_example where match(prompt_text, completion_text) against('{search_text}')
+        search_text = search_text.replace("'", "''")
         minimum_relevance_score = 0
         return Example.objects.raw(
             f"""
