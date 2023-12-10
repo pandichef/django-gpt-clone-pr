@@ -139,6 +139,10 @@ class Example(models.Model):
         ALTER TABLE base_app_example ADD FULLTEXT INDEX (prompt_text, completion_text);
         See https://database.guide/how-the-match-function-works-in-mysql/
         https://www.promptingguide.ai/techniques/rag
+
+        migrations.RunSQL(
+            sql="ALTER TABLE base_app_example ADD FULLTEXT INDEX (prompt_text, completion_text);"
+        ), # added to initial migration
         """
         # qs = cls.objects.all()
         # select * from base_app_example where match(prompt_text, completion_text) against('{search_text}')
