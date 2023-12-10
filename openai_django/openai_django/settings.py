@@ -78,6 +78,9 @@ WSGI_APPLICATION = "openai_django.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 if os.name == "posix":
+    from dotenv import load_dotenv
+
+    load_dotenv()  # take environment variables from .env.
     # DATABASES = {
     #     "default": {
     #         "ENGINE": "django.db.backends.sqlite3",
