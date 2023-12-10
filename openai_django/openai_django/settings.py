@@ -81,22 +81,22 @@ if os.name == "posix":
     from dotenv import load_dotenv
 
     load_dotenv()  # take environment variables from .env.
-    DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.sqlite3",
-            "NAME": BASE_DIR / "db.sqlite3",
-        }
-    }
     # DATABASES = {
     #     "default": {
-    #         "ENGINE": "django.db.backends.mysql",
-    #         "NAME": "chatpr$default",  # Database name
-    #         "USER": os.environ["MYSQL_USERNAME"],
-    #         "PASSWORD": os.environ["MYSQL_USER_PASSWORD"],
-    #         "HOST": "chatpr.mysql.pythonanywhere-services.com",  # Database host address
-    #         "PORT": "",  # Leave it empty for default MySQL port (3306)
+    #         "ENGINE": "django.db.backends.sqlite3",
+    #         "NAME": BASE_DIR / "db.sqlite3",
     #     }
     # }
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.mysql",
+            "NAME": "chatpr$default",  # Database name
+            "USER": os.environ["MYSQL_USERNAME"],
+            "PASSWORD": os.environ["MYSQL_USER_PASSWORD"],
+            "HOST": "chatpr.mysql.pythonanywhere-services.com",  # Database host address
+            "PORT": "",  # Leave it empty for default MySQL port (3306)
+        }
+    }
 else:  # local dev on windows
     DATABASES = {
         "default": {
