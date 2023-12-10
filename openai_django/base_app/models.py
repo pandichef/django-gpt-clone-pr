@@ -5,10 +5,26 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.db.models import QuerySet
 from django.db.models import F, Case, When, Value, CharField, Q
+from django.conf import settings
 
-
-base_openai_model = "gpt-3.5-turbo-1106"
+# base_openai_model = "gpt-3.5-turbo-1106"
 # base_openai_model = "gpt-4" # on waitlist
+base_openai_model = settings.BASE_OPENAI_MODEL
+
+
+# class Search(models.Lookup):
+#     lookkup_name = "search"
+
+
+# def as_mysql(self, compiler, connection):
+#     lhs, lhs_params = self.process_lhs(compiler, connection)
+#     rhs, rhs_params = self.process_rhs(compiler, connection)
+#     params = lhs_params + rhs_params
+#     return "MATCH (%s) AGAINST (%s IN BOOLEAN MODE)" % (lhs, rhs), params
+
+
+# models.CharField.register_lookup(Search)
+# models.TextField.register_lookup(Search)
 
 
 class CustomUser(AbstractUser):
@@ -115,6 +131,40 @@ class Example(models.Model):
     fine_tuning_job = models.ForeignKey(
         FineTuningJob, on_delete=models.SET_NULL, null=True, blank=True
     )
+
+    @classmethod
+    def get_search_results(cls, search_text):
+        """
+        The following must be run first
+        ALTER TABLE base_app_example ADD FULLTEXT INDEX (prompt_text, completion_text);
+        See https://database.guide/how-the-match-function-works-in-mysql/
+        https://www.promptingguide.ai/techniques/rag
+        """
+        # qs = cls.objects.all()
+        # select * from base_app_example where match(prompt_text, completion_text) against('{search_text}')
+        minimum_relevance_score = 0
+        return Example.objects.raw(
+            f"""
+SELECT 
+  id, MATCH(prompt_text, completion_text) AGAINST('{search_text}') AS relevance
+FROM base_app_example
+WHERE MATCH(prompt_text, completion_text) AGAINST('{search_text}') > {minimum_relevance_score}
+ORDER BY relevance DESC;
+"""
+        )
+
+    @classmethod
+    def get_rag_text(cls, search_text):
+        from .finetune import add_context_info
+
+        rawqs = cls.get_search_results(search_text)
+        rag_text = ""
+        for example in rawqs:
+            obj = cls.objects.get(id=example.id)
+            rag_text += (
+                f"Question: {obj.prompt_text}\nAnswer: {add_context_info(obj)}\n##\n"
+            )
+        return rag_text
 
     def __str__(self):
         return (

@@ -3,7 +3,8 @@ from django.conf import settings
 import os
 import openai
 from .models import FineTuningJob, Example
-from .simple_search import sort_string_list
+
+# from .simple_search import sort_string_list
 from .finetune import add_context_info
 import tiktoken
 
@@ -28,7 +29,7 @@ def make_full_prompt(example):
 # else:
 #     raise Exception("OpenAI API Key not found")
 
-
+"""
 def collate_prior_prompts(prompt, return_size=5):
     # todo: limit examples by rank
     examples = Example.objects.all()
@@ -50,6 +51,7 @@ def collate_prior_prompts(prompt, return_size=5):
     # return sorted[:return_size]
     # print(len(database_prompts))
     return database_prompts, database_prompts_summarized  # , prompt_index
+"""
 
 
 # def collate_prior_prompts():
@@ -62,12 +64,16 @@ def collate_prior_prompts(prompt, return_size=5):
 
 
 def get_completion(prompt):
-    lastest_openai_model = FineTuningJob.get_latest_openai_model()
+    if settings.OPENAI_MODEL_OVERRIDE:
+        lastest_openai_model = settings.OPENAI_MODEL_OVERRIDE
+    else:
+        lastest_openai_model = FineTuningJob.get_latest_openai_model()
     try:
         from openai import OpenAI
 
         client = OpenAI()
 
+        """
         (database_prompts, database_prompts_summarized,) = collate_prior_prompts(prompt)
         prompt_plus = (
             "Provide the best possible answer to the following questions.\n\n"
@@ -79,25 +85,21 @@ def get_completion(prompt):
             + database_prompts_summarized
             + f"Question: {prompt}\nAnswer: "
         )
-        # print(prompt_plus)
-        # print(f"Estimated token count: {len(prompt_plus.split())}")
-        # print(prompt_plus)
-        # prompt_plus = prompt
-
+        """
+        rag_plus_prompt = (
+            "Provide the best possible answer to the following questions.\n\n"
+            + Example.get_rag_text(prompt)
+            + f"Question: {prompt}\nAnswer: "
+        )
         completion = client.chat.completions.create(
             model=lastest_openai_model,
             messages=[
                 {"role": "system", "content": settings.SYSTEM_CONTENT,},
-                {"role": "user", "content": prompt_plus},
+                {"role": "user", "content": rag_plus_prompt},
             ],
         )
-        # print(completion)
-        # print(
-        #     "prompt_plus:\n",
-        #     database_prompts_summarized + f"Question: {prompt}\nAnswer: ",
-        # )
-        print("prompt_plus:\n", prompt_plus_summarized)
-        print("Prompt token count: ", token_count(prompt_plus))
+        # print("prompt_plus:\n", prompt_plus_summarized)
+        print("rag_plus_prompt Token count: ", token_count(rag_plus_prompt))
         print(f"Used {lastest_openai_model} for front-end application")
         return str(completion.choices[0].message.content)
     except Exception as e:
