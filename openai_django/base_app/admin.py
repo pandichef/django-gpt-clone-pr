@@ -189,10 +189,10 @@ class ExampleAdmin(admin.ModelAdmin):
 
     # actions = ["export_as_txt"]
 
-    readonly_fields = (
-        "fine_tuning_job",
-        "created_by",
-    )
+    # readonly_fields = (
+    #     "fine_tuning_job",
+    #     "created_by",
+    # )
     list_display = (
         "is_approved",
         "fine_tuning_job",
@@ -207,6 +207,16 @@ class ExampleAdmin(admin.ModelAdmin):
     )
     list_filter = ("is_approved", "created_by")
     search_fields = ("prompt_text", "completion_text", "private_note")
+
+    def get_readonly_fields(self, request, obj=None):
+        # Common readonly fields for all users
+        readonly_fields = ["fine_tuning_job", "created_by"]
+
+        # Add 'is_approved' to readonly fields for non-superusers
+        if not request.user.is_superuser:
+            readonly_fields.append("is_approved")
+
+        return readonly_fields
 
     def prompt(self, obj):
         return obj.prompt_text[:140] + "..." if obj.prompt_text else ""
