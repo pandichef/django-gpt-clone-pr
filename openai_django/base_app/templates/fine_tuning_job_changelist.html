@@ -2,14 +2,16 @@
 
 {% block object-tools %}
     <div>
-        <form action="process_approved_examples/" method="POST">
-            {% csrf_token %}
-                <button type="submit">Process approved examples</button>
-        </form>
-        <!-- <form action="mortal/" method="POST">
-            {% csrf_token %}
-                <button type="submit">Make Mortal</button>
-        </form> -->
+        {% if user.is_superuser %}
+            <form action="process_approved_examples/" method="POST">
+                {% csrf_token %}
+                    <button type="submit">Process approved examples</button>
+            </form>
+            <!-- <form action="mortal/" method="POST">
+                {% csrf_token %}
+                    <button type="submit">Make Mortal</button>
+            </form> -->
+        {% endif %}
     </div>
     <br />
     {{ block.super }}
